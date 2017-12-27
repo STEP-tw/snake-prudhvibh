@@ -5,26 +5,19 @@ let numberOfCols=120;
 
 let animator=undefined;
 
-const printResult = function() {
+const stopGame = function() {
   clearInterval(animator);
-  document.getElementById('result').style.visibility = 'visible';
+  printResult();
 }
 
 const ifHeadTouchesWall = function(head) {
   let manXPos = numberOfCols-1;
   let maxYPos = numberOfRows-1;
   if(head.x == 0 || head.x == manXPos || head.y == 0 || head.y == maxYPos) {
-    printResult();
+    stopGame();
   }
 }
 
-const ifHeadTouchesBody = function(head,tail) {
-  return tail.forEach(function(positions){
-    if(head.x == positions.x && head.y == positions.y){
-      printResult();
-    }
-  })
-}
 
 const animateSnake=function() {
   let oldHead=snake.getHead();
@@ -32,7 +25,10 @@ const animateSnake=function() {
   let head=snake.getHead();
   let tail = snake.getBody();
   ifHeadTouchesWall(head);
-  ifHeadTouchesBody(head,tail)
+  if(snake.hasEatenItself()){
+    stopGame();
+    return;
+  }
   paintBody(oldHead);
   unpaintSnake(oldTail);
   paintHead(head);

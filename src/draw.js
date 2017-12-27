@@ -39,3 +39,7 @@ const drawSnake=function(snake) {
 const drawFood=function(food) {
   paintCell(food,"food");
 }
+
+const printResult = function(){
+  document.getElementById('result').style.visibility = 'visible';
+}
