@@ -10,13 +10,15 @@ const printResult = function() {
   document.getElementById('result').style.visibility = 'visible';
 }
 
-const isHeadTouchedWall = function(head) {
-  if(head.x == 0 || head.x == 119 || head.y == 0 || head.y == 59) {
+const ifHeadTouchesWall = function(head) {
+  let manXPos = numberOfCols-1;
+  let maxYPos = numberOfRows-1;
+  if(head.x == 0 || head.x == manXPos || head.y == 0 || head.y == maxYPos) {
     printResult();
   }
 }
 
-const isHeadTouchedTail = function(head,tail) {
+const ifHeadTouchesBody = function(head,tail) {
   return tail.forEach(function(positions){
     if(head.x == positions.x && head.y == positions.y){
       printResult();
@@ -29,8 +31,8 @@ const animateSnake=function() {
   let oldTail=snake.move();
   let head=snake.getHead();
   let tail = snake.getBody();
-  isHeadTouchedWall(head);
-  isHeadTouchedTail(head,tail)
+  ifHeadTouchesWall(head);
+  ifHeadTouchesBody(head,tail)
   paintBody(oldHead);
   unpaintSnake(oldTail);
   paintHead(head);
