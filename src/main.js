@@ -5,10 +5,32 @@ let numberOfCols=120;
 
 let animator=undefined;
 
+const printResult = function() {
+  clearInterval(animator);
+  document.getElementById('result').style.visibility = 'visible';
+}
+
+const isHeadTouchedWall = function(head) {
+  if(head.x == 0 || head.x == 119 || head.y == 0 || head.y == 59) {
+    printResult();
+  }
+}
+
+const isHeadTouchedTail = function(head,tail) {
+  return tail.forEach(function(positions){
+    if(head.x == positions.x && head.y == positions.y){
+      printResult();
+    }
+  })
+}
+
 const animateSnake=function() {
   let oldHead=snake.getHead();
   let oldTail=snake.move();
   let head=snake.getHead();
+  let tail = snake.getBody();
+  isHeadTouchedWall(head);
+  isHeadTouchedTail(head,tail)
   paintBody(oldHead);
   unpaintSnake(oldTail);
   paintHead(head);
