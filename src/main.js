@@ -1,7 +1,7 @@
-let snake=undefined;
-let food=undefined;
 let numberOfRows=60;
 let numberOfCols=120;
+
+let game = new Game(numberOfRows,numberOfCols);
 
 let animator=undefined;
 
@@ -10,34 +10,26 @@ const stopGame = function() {
   printResult();
 }
 
-const ifHeadTouchesWall = function(head) {
-  let manXPos = numberOfCols-1;
-  let maxYPos = numberOfRows-1;
-  if(head.x == 0 || head.x == manXPos || head.y == 0 || head.y == maxYPos) {
-    stopGame();
-  }
-}
-
-
 const animateSnake=function() {
-  let oldHead=snake.getHead();
-  let oldTail=snake.move();
-  let head=snake.getHead();
-  let tail = snake.getBody();
-  ifHeadTouchesWall(head);
-  if(snake.hasEatenItself()){
+  let oldHead=game.snake.getHead();
+  let oldTail=game.snake.move();
+  let head=game.snake.getHead();
+  if(game.hasSnakeHittedWall()) {
     stopGame();
     return;
   }
   paintBody(oldHead);
   unpaintSnake(oldTail);
   paintHead(head);
-  if(head.isSameCoordAs(food)) {
-    snake.grow();
-    createFood(numberOfRows,numberOfCols);
-    drawFood(food);
+  if(game.snake.hasEatenItself()){
+    stopGame();
   }
-}
+  if(head.isSameCoordAs(game.food)) {
+    game.snake.grow();
+    createFood(numberOfRows,numberOfCols);
+    drawFood(game.food);
+  }
+};
 
 const changeSnakeDirection=function(event) {
   switch (event.code) {
@@ -66,12 +58,12 @@ const createSnake=function() {
   body.push(tail);
   body.push(tail.next());
   let head=tail.next().next();
-
   snake=new Snake(head,body);
+  game.addSnake(snake);
 }
 
 const createFood=function(numberOfRows,numberOfCols) {
-  food=generateRandomPosition(numberOfCols,numberOfRows);
+  game.food=generateRandomPosition(numberOfCols,numberOfRows);
 }
 
 const startGame=function() {
@@ -79,9 +71,9 @@ const startGame=function() {
   drawGrids(numberOfRows,numberOfCols);
   drawSnake(snake);
   createFood(numberOfRows,numberOfCols);
-  drawFood(food);
+  drawFood(game.food);
   addKeyListener();
   animator=setInterval(animateSnake,140);
-}
+};
 
 window.onload=startGame;
